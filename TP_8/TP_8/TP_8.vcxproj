@@ -116,10 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Compressor.h" />
+    <ClInclude Include="lodepng.h" />
     <ClInclude Include="Pixel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compressor.cpp" />
+    <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Pixel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
