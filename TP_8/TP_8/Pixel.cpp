@@ -7,12 +7,12 @@ Pixel::Pixel()
 	R = G = B = alpha = 0;
 }
 
-Pixel::Pixel(const char * content)
+Pixel::Pixel(const char * R_, const char * G_, const char * B_, const char * Alpha_)
 {
-	R = *content;
-	G = *(content+1);
-	B = *(content+2);
-	alpha = *(content+3);
+	R = *R_;
+	G = *G_;
+	B = *B_;
+	alpha = *Alpha_;
 }
 
 unsigned char Pixel::getR(void)
@@ -33,6 +33,14 @@ unsigned char Pixel::getB(void)
 unsigned char Pixel::getAlpha(void)
 {
 	return alpha;
+}
+
+void Pixel::operator=(Pixel & source)
+{
+	R = source.R;
+	G = source.G;
+	B = source.B;
+	alpha = source.alpha;
 }
 
 
