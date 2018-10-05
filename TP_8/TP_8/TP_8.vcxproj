@@ -115,12 +115,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AllegroImage.h" />
     <ClInclude Include="Compressor.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Pixel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compressor.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Pixel.cpp" />
   </ItemGroup>
