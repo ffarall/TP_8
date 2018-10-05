@@ -38,6 +38,19 @@ void Image::setPath(std::string path_)
 	path = path_;
 }
 
+ImageSize Image::getSize()
+{
+	return ImageSize();
+}
+
+void Image::setSize(int width, int heigth)
+{
+}
+
+void Image::setSize(ImageSize size_)
+{
+}
+
 
 
 std::string Image::getFormat()

@@ -1,5 +1,14 @@
 #pragma once
 #include<iostream>
+
+
+class ImageSize
+{
+public:
+	int height;
+	int width;
+};
+
 class Image
 {
 public:
@@ -13,6 +22,9 @@ public:
 	virtual void setPath(char* path_);
 	virtual void setPath(std::string path_);
 
+	virtual ImageSize getSize();
+	virtual void setSize(int width, int heigth);
+	virtual void setSize(ImageSize size_);
 
 	virtual std::string getFormat();  //format getter (set automatico)
 
@@ -20,4 +32,6 @@ public:
 private:
 	std::string path; 	
 	std::string format;
+	ImageSize size;
+	
 };
