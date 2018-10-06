@@ -5,14 +5,21 @@ int main(int argc, char* argv[])
 {
 	//
 	Compressor hola;
-	if (hola.decode("test.eda"))
+	if (hola.encode("test.png"))
 	{
-		std::cout << "se pudo imprimir\n";
+
+		if (hola.decode("test.eda"))
+		{
+			std::cout << "se pudo imprimir\n";
+		}
+		else
+		{
+			std::cout << "murio intentando descomprimir\n";
+		}
+		std::cout << "fin de la descompresion...\n";
+		getchar();
+	
 	}
-	else
-	{
-		std::cout << "murio intentando descomprimir\n";
-	}
-	std::cout << "fin de la trasmision...\n";
+
 	return 0;
 }
