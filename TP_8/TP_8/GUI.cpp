@@ -21,7 +21,7 @@ GUI::~GUI()
 	selectedImgs.clear();
 }
 
-bool GUI::createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES ,unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT)
+bool GUI::createUI(unsigned int ImagesPerPage_  ,unsigned int dWidth , unsigned int dHeight )
 {
 	bool retVal = true;
 	display = al_create_display(dWidth, dHeight);
@@ -159,7 +159,7 @@ bool GUI::allegroInit() //inicializa modulos de allegro usados
 	{
 		if (al_init_image_addon())
 		{			
-			if (al_install_keyboard)
+			if (al_install_keyboard())
 			{
 				retVal = true;
 			}

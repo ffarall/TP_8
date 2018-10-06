@@ -59,12 +59,12 @@ bool AllegroImage::isSelected()
 
 void AllegroImage::toggleSelect()
 {
-	selected != selected;
+	selected = !selected;
 }
 
 void AllegroImage::toggleOnDisplay()
 {
-	onDisplay != onDisplay;
+	onDisplay = !onDisplay;
 }
 
 bool AllegroImage::errorOcurred()

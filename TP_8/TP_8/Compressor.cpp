@@ -30,6 +30,8 @@ Compressor::Compressor(char * dataArray, double threshold_) : pixelMatrix()
 			init((char *)tempArray, n);
 		}
 	}
+
+	threshold = threshold_ * 255 / 100;
 	
 }
 
@@ -80,32 +82,29 @@ bool Compressor::decode(const char * filename)
 
 	n = (unsigned int)sqrt(size);
 
-	/*c = archivo.get();
-	if (c != 'n' && c != 'N') // si despues de ¿l tamaño no tengo una N esta mal comprimido el archivo
-	{
-		return false;
-	}*/
 	
 	//dejo todo listo para empezar la recursion
 
 	decodeRec(archivo, n / 2, 0, n);
 
 	//en el vector pixel tengo todos los valores que tengo que pasar a char* para el encode32
-	unsigned char * dataFinalPNGNew = new unsigned char[size*4];
-	int cont = 0;
-	for (Pixel a : pixelMatrix )
+	vector<unsigned char> image;
+	image.resize(size * 4);
+	for (unsigned y = 0; y < n; y++)
 	{
-		*(dataFinalPNGNew+cont) = a.getR();
-		*(dataFinalPNGNew+ cont + 1) = a.getG();
-		*(dataFinalPNGNew+ cont + 2) = a.getB();
-		*(dataFinalPNGNew+ cont + 3) = a.getAlpha();
-		cont++;
+		for (unsigned x = 0; x < n; x++)
+		{
+			image[4 * n * y + 4 * x + 0] = getPixel(x,y).getR();
+			image[4 * n * y + 4 * x + 1] = getPixel(x,y).getG();
+			image[4 * n * y + 4 * x + 2] = getPixel(x,y).getB();
+			image[4 * n * y + 4 * x + 3] = 255/*getPixel(x,y).getAlpha()*/;
+		}
 	}
+	unsigned error = lodepng_encode32_file("nombre.png", &(*image.begin()) , n, n); // cambiar lo de nombre.png
 	
-	lodepng_encode32_file("nombre.png", dataFinalPNGNew, n, n); // cambiar lo de nombre.png
-	
+	if (error) std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+
 	archivo.close();
-	delete []dataFinalPNGNew ;
 	return true;
 }
 
