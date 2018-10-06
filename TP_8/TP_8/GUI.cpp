@@ -55,7 +55,14 @@ bool GUI::createUI(unsigned int ImagesPerPage_  ,unsigned int dWidth , unsigned 
 		}
 		displaySize.height = dHeight;
 		displaySize.width = dWidth;
-		imagesPerPage = ImagesPerPage_;
+		if (ImagesPerPage_ > 0)
+		{
+			imagesPerPage = ImagesPerPage_;
+		}
+		else
+		{
+			imagesPerPage = DEFAULT_PAGE_IMAGES;
+		}
 		configOnScreenImgs();
 		refresh();
 		return UIcreated = retVal;
@@ -78,31 +85,32 @@ void GUI::closeUI()
 	}
 }
 
-EventType GUI::needToRefresh()
+bool GUI::needToRefresh()
 {
 	if (UIcreated)
 	{
-		//chequear que el evento sea reelevante
-		//devolver el tipo de evento
-		//return !al_is_event_queue_empty(eventQueue);
+		return !al_is_event_queue_empty(eventQueue);
 	}
 	else
 	{
 		allegroError.setErrType(ErrType::UI_NOT_CREATED);
 		allegroError.setErrDetail(string("Attempted operation while GUI not created \n") );
+		return false;
 	}
 }
 
 void GUI::refresh()
 {
 	if (UIcreated)
-	{
-		
-		clearDisplay();
-		drawBackround();
-		drawImages();
-		drawScreenInterface();
-		al_flip_display();
+	{	
+		if (filterEvent())
+		{
+			clearDisplay();
+			drawBackround();
+			drawImages();
+			drawScreenInterface();
+			al_flip_display();
+		}
 	}
 	else
 	{
@@ -233,6 +241,82 @@ void GUI::drawBackround()
 
 void GUI::drawImages()
 {
+	//dibujar las imagenes en relacion a la cantidad que necesito mostrar
+	//escribir los nombres de las imagenes
+	//dibujar los cositos que dicen si esta seleccionada o no
 	
-	
+}
+
+bool GUI::filterEvent()
+{
+	bool retVal;
+	ALLEGRO_EVENT* receivedEv;
+	al_get_next_event(eventQueue, receivedEv);
+	switch (receivedEv->type)
+	{
+	case ALLEGRO_EVENT_DISPLAY_CLOSE:
+		done = true;
+		closeUI();
+		retVal= false;
+		break;
+	case ALLEGRO_EVENT_KEY_UP:
+		switch (receivedEv->keyboard.keycode)
+		{
+		case ALLEGRO_KEY_LEFT:
+			turnPageLeft();
+			retVal = true;
+			break;
+		case ALLEGRO_KEY_RIGHT:
+			turnPageRight();
+			retVal = true;
+			break;
+		case ALLEGRO_KEY_A:
+			selectAll();
+			retVal = true;
+			break;
+		case ALLEGRO_KEY_N:
+			deselectAll();
+			retVal = true;
+			break;
+		default:
+			retVal = false;
+			break;
+		}		
+		break;
+	case ALLEGRO_EVENT_KEY_CHAR:
+		if (receivedEv->keyboard.unichar >= '1' && receivedEv->keyboard.unichar <= '9')
+		{
+			usrImgs[keyToImg(receivedEv->keyboard.unichar)]->toggleSelect();
+			retVal = true;
+		}
+		break;
+	default:
+		retVal = false;
+		break;
+	}
+	return retVal;
+}
+
+unsigned int GUI::keyToImg(const char pressedKey)
+{
+	unsigned int image = pressedKey - '1';
+	image += currentPage * imagesPerPage;
+	return image;
+}
+
+void GUI::turnPageLeft()
+{
+	while(usrImgs)
+}
+
+void GUI::turnPageRight()
+{
+}
+
+void GUI::selectAll()
+{
+}
+
+void GUI::deselectAll()
+{
 }
