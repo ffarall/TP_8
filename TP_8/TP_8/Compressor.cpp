@@ -43,8 +43,24 @@ void Compressor::init(char * dataArray, int n_)
 	n = n_;
 	for (unsigned int i = 0; i < n * n; i++)
 	{
-		pixelMatrix.push_back(Pixel(dataArray + i + 1, dataArray + i + 2, dataArray + i + 3, dataArray + i + 4));	// Add n*n Pixels initialised with (red, green, blue, alfa).
+		pixelMatrix.push_back(Pixel(*(dataArray + i + 1), *(dataArray + i + 2), *(dataArray + i + 3), *(dataArray + i + 4)));	// Add n*n Pixels initialised with (red, green, blue, alfa).
 	}
+}
+
+bool Compressor::encode(const char * filename)
+{
+	compressedFile.open(filename);
+	uint32_t imageSize = n * n * 4;				// There are n*n pixels, each containing 4 bytes.
+	compressedFile << imageSize;				// First 4 bytes of the file determine the size.
+
+	if (n == 1)
+	{
+		compressedFile << getPixel(0, 0).getR() << getPixel(0, 0).getG() << getPixel(0, 0).getB() << getPixel(0, 0).getAlpha();		// Borderline case: if the image is 1 pixel in size.
+		return true;
+	}
+	compressedFile << 'N';						// After the size, comes the first node, whenever the image is bigger than 1 pixel.
+
+	return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
 }
 
 bool Compressor::decode(const char * filename)
@@ -54,7 +70,7 @@ bool Compressor::decode(const char * filename)
 	
 	if (file.substr(file.find_last_of('.') + 1) != MY_FILE_EXTENTION)
 	{
-		return false; // if a wrong file is recieved, an error is sent 
+		return false; // if a wrong file is received, an error is sent 
 	}
 	
 	fstream archivo;
@@ -150,11 +166,75 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 	{
 		decodeRec(fp, x, y, ancho / 2); //cuadrante 1
 		decodeRec(fp, x-(ancho/2), y, ancho / 2); //cuadrante 2
-		decodeRec(fp, x-(ancho/2), y+(ancho/2), ancho / 2); //cuandrante 3
+		decodeRec(fp, x-(ancho/2), y+(ancho/2), ancho / 2); //cuadrante 3
 		decodeRec(fp, x, y+(ancho/2) , ancho / 2); //cuadrante 4
 	}
 
 	return true;
+}
+
+bool Compressor::encodeRec(int x, int y, int n_)
+{
+	Pixel maxPixel;
+	Pixel minPixel(255, 255, 255, 255);
+	Pixel tempPixel;
+
+	for (int i = 0; i < n_; i++)
+	{
+		for (int j = 0; j < n_; j++)
+		{
+			tempPixel = getPixel(x + j, y + i);
+			if (maxPixel.getR() < tempPixel.getR())
+			{
+				maxPixel.setR(tempPixel.getR());
+			}
+			if (minPixel.getR() > tempPixel.getR());
+			{
+				minPixel.setR(tempPixel.getR());
+			}
+			if (maxPixel.getG() < tempPixel.getG())
+			{
+				maxPixel.setG(tempPixel.getG());
+			}
+			if (minPixel.getG() > tempPixel.getG());
+			{
+				minPixel.setG(tempPixel.getG());
+			}
+			if (maxPixel.getB() < tempPixel.getB())
+			{
+				maxPixel.setB(tempPixel.getB());
+			}
+			if (minPixel.getB() > tempPixel.getB());
+			{
+				minPixel.setB(tempPixel.getB());
+			}
+			if (maxPixel.getAlpha() < tempPixel.getAlpha())
+			{
+				maxPixel.setAlpha(tempPixel.getAlpha());
+			}
+			if (minPixel.getAlpha() > tempPixel.getAlpha());
+			{
+				minPixel.setAlpha(tempPixel.getAlpha());
+			}
+		}
+	}
+
+	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getG() - minPixel.getG(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
+
+	if (quadrantScore < threshold)		// If the variation is less than the threshold established...
+	{
+		compressedFile << 'H';														// The program arrived to a leave of the quad tree.
+		compressedFile << ((maxPixel.getR() + minPixel.getR()) / 2);				// Writing average RED to file.
+		compressedFile << ((maxPixel.getG() + minPixel.getG()) / 2);				// Writing average GREEN to file.
+		compressedFile << ((maxPixel.getB() + minPixel.getB()) / 2);				// Writing average BLUE to file.
+		compressedFile << ((maxPixel.getAlpha() + minPixel.getAlpha()) / 2);		// Writing average ALPHA to file.
+		return true;
+	}
+	else
+	{
+		compressedFile << 'N';				// Since the variation is higher than the threshold, a new node is created.
+		return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
+	}
 }
 
 
