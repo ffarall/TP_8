@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "Pixel.h"
 
@@ -10,16 +11,21 @@ class Compressor
 {
 public:
 	Compressor();
-	Compressor(char * dataArray, int n_);
+	Compressor(char * dataArray, double threshold_);
 	~Compressor();
 
 	void init(char * dataArray, int n_);
 	bool encode();					// Creates compressed file from the pixelMatrix.
-	bool decode(char * filename);	// Creates .png file from compressed file.
+	bool decode(const char * filename);	// Creates .png file from compressed file.
 
 private:
-	vector<Pixel> pixelMatrix;		// Matrix containing n*n Pixels.
-	int n;							// Pixels per side in matrix.
 	Pixel getPixel(int x, int y);	// Method to treat pixelMatrix as a matrix (kind of implementing pointer's algebra).
+	bool setPixel(Pixel& pixel_, unsigned int x, unsigned int y);
+	bool decodeRec(fstream& fp, int x, int y, int ancho);
+
+	vector<Pixel> pixelMatrix;		// Matrix containing n*n Pixels.
+	unsigned int n;					// Pixels per side in matrix.
+	double threshold;
+
 };
 
