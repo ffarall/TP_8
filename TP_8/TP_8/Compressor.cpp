@@ -51,8 +51,9 @@ void Compressor::init(char * dataArray, int n_)
 	}
 }
 
-bool Compressor::encode(const char * filename)
+bool Compressor::encode(const char * filename_)
 {
+	string filename = filename_ + '.' + string(MY_FILE_EXTENTION);
 	compressedFile.open(filename);
 	uint32_t imageSize = n * n * 4;				// There are n*n pixels, each containing 4 bytes. 
 	compressedFile << imageSize;				// First 4 bytes of the file determine the size. 
