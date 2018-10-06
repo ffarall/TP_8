@@ -17,7 +17,7 @@ public:
 	unsigned int width;
 	unsigned int height;
 };
-
+enum class EventType{ADD_POSSIBLE EVENTS HERE};
 class GUI
 {
 public:
@@ -27,7 +27,7 @@ public:
 
 	bool createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES, unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
 	void closeUI();
-	bool needToRefresh();
+	EventType needToRefresh();
 	void refresh();
 	bool finished();	
 	bool addImage(std::string path);
@@ -53,6 +53,7 @@ private:
 
 	bool allegroInit();
 	void allegroDestroy();
+	void configOnScreenImgs();
 	void clearDisplay();
 	void drawScreenInterface();
 	void drawBackround();
