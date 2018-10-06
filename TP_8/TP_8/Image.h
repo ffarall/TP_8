@@ -5,8 +5,11 @@
 class ImageSize
 {
 public:
+	ImageSize();
+	ImageSize(int height, int width);
 	int height;
 	int width;
+	ImageSize& operator= (ImageSize& size);
 };
 
 class Image
@@ -23,13 +26,13 @@ public:
 	virtual void setPath(std::string path_);
 
 	virtual ImageSize getSize();
-	virtual void setSize(int width, int heigth);
-	virtual void setSize(ImageSize size_);
+	virtual void setSize(int width, int height);
+	virtual void setSize(ImageSize size_) ;
 
 	virtual std::string getFormat();  //format getter (set automatico)
 
 
-private:
+protected:
 	std::string path; 	
 	std::string format;
 	ImageSize size;

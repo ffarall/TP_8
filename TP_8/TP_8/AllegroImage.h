@@ -2,6 +2,8 @@
 #include<iostream>
 #include"Image.h"
 #include"allegro5/allegro.h"
+#include"Error.h"
+
 
 
 class AllegroImage : public Image
@@ -9,6 +11,7 @@ class AllegroImage : public Image
 public:
 	AllegroImage();
 	AllegroImage(std::string path_);
+	~AllegroImage();
 
 	virtual void setPath(std::string path_);
 
@@ -16,10 +19,13 @@ public:
 	ALLEGRO_BITMAP* getBitmap();
 
 	void toggleSelect();
+	void toggleOnDisplay();
+	bool errorOcurred();
 
 private:
 	ALLEGRO_BITMAP* bitmap;
 	bool selected;
-
+	bool onDisplay;
+	bool isOk;
 };
 

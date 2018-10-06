@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 
-enum class ErrType{NO_ERROR};//AGREGAR TODOS LOS TIPOS DE ERRORES
+enum class ErrType{NO_ERROR, IMAGE_LOAD_ERROR};//AGREGAR TODOS LOS TIPOS DE ERRORES
 class Error
 {
 public:

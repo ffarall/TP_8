@@ -131,6 +131,7 @@
     <ClCompile Include="AllegroImage.cpp" />
     <ClCompile Include="Compressor.cpp" />
     <ClCompile Include="Error.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Pixel.cpp" />

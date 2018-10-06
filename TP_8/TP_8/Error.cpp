@@ -11,7 +11,17 @@ ErrType Error::getErrType()
 	return errorType;
 }
 
+void Error::setErrType(ErrType type)
+{
+	errorType = type;
+}
+
 std::string Error::getErrDetail()
 {
 	return errorDetail;
+}
+
+void Error::setErrDetail(std::string detail)
+{
+	errorDetail = detail;
 }
