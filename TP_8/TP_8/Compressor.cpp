@@ -47,7 +47,7 @@ void Compressor::init(char * dataArray, int n_)
 	n = n_;
 	for (unsigned int i = 0; i < n * n; i++)
 	{
-		pixelMatrix.push_back(Pixel(dataArray + i + 1, dataArray + i + 2, dataArray + i + 3, dataArray + i + 4));	// Add n*n Pixels initialised with (red, green, blue, alfa).
+		pixelMatrix.push_back(Pixel(*(dataArray + i + 1),*(dataArray + i + 2), *(dataArray + i + 3), *(dataArray + i + 4) ));	// Add n*n Pixels initialised with (red, green, blue, alfa).
 	}
 }
 
@@ -79,7 +79,7 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 		g = (char)fp.get();
 		b = (char)fp.get();
 		alpha = (char)fp.get();
-		Pixel p(&r, &g, &b, &alpha);
+		Pixel p(r, g, b, alpha);
 
 		for (int i = 0; i < ancho; i++) //pinto una serir de pixels
 		{
@@ -152,7 +152,7 @@ bool Compressor::decode(const char * filename)
 		}
 	}
 
-	int x = file.find_last_of('\\');
+	size_t x = file.find_last_of('\\');
 	string exitName = file.substr(x == file.npos ? 0 : x, file.find_last_of('.') + 1) + "png"; // el png tendra el mismo nombre que el comprimido
 	unsigned error = lodepng_encode32_file(exitName.c_str(), &(*image.begin()), n, n);
 
@@ -164,7 +164,7 @@ bool Compressor::decode(const char * filename)
 
 bool Compressor::isOk(void)
 {
-	return (compressorError.getErrType == ErrType::NO_ERROR);
+	return (compressorError.getErrType() == ErrType::NO_ERROR);
 }
 
 string Compressor::getError(void)
