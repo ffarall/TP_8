@@ -52,6 +52,11 @@ ALLEGRO_BITMAP * AllegroImage::getBitmap()
 	return bitmap;
 }
 
+bool AllegroImage::isSelected()
+{
+	return selected;
+}
+
 void AllegroImage::toggleSelect()
 {
 	selected != selected;

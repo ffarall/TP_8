@@ -21,7 +21,7 @@ GUI::~GUI()
 	selectedImgs.clear();
 }
 
-bool GUI::createUI(unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT)
+bool GUI::createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES ,unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT)
 {
 	bool retVal = true;
 	display = al_create_display(dWidth, dHeight);
@@ -51,8 +51,10 @@ bool GUI::createUI(unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT)
 		al_destroy_display(display);
 
 	}
-	UIcreated = true;
-	return retVal;
+	displaySize.height = dHeight;
+	displaySize.width = dWidth;
+	imagesPerPage = ImagesPerPage_;
+	return UIcreated = retVal;
 }
 
 void GUI::closeUI()
@@ -63,21 +65,38 @@ void GUI::closeUI()
 		al_destroy_event_queue(eventQueue);
 		al_destroy_bitmap(backround);
 	}
-
 }
 
 bool GUI::needToRefresh()
 {
-	return !al_is_event_queue_empty(eventQueue);
+	if (UIcreated)
+	{
+		return !al_is_event_queue_empty(eventQueue);
+	}
+	else
+	{
+		allegroError.setErrType(ErrType::UI_NOT_CREATED);
+		allegroError.setErrDetail(string("Attempted operation while GUI not created \n") );
+		return false;
+	}
 }
 
 void GUI::refresh()
 {
-	clearDisplay();
-	drawBackround();
-	drawImages();
-	drawScreenInterface();
-	al_flip_display();
+	if (UIcreated)
+	{
+		clearDisplay();
+		drawBackround();
+		drawImages();
+		drawScreenInterface();
+		al_flip_display();
+	}
+	else
+	{
+		allegroError.setErrType(ErrType::UI_NOT_CREATED);
+		allegroError.setErrDetail(string("Attempted operation while GUI not created \n"));
+	}
+
 }
 
 bool GUI::finished()
@@ -86,9 +105,15 @@ bool GUI::finished()
 }
 
 bool GUI::addImage(std::string path)
-{
-	//falta!!!!
-	return false;
+{	
+	usrImgs.push_back(new AllegroImage(path));
+	if (usrImgs.back()->errorOcurred())
+	{
+		allegroError.setErrType(ErrType::ALLEGRO_FAILED_IMAGE_LOAD);
+		allegroError.setErrDetail(string("Failed to load image at ") + path + '\n');
+		return false;
+	}
+	return true;
 }
 
 Error & GUI::getError()
@@ -96,10 +121,25 @@ Error & GUI::getError()
 	return allegroError;
 }
 
-vector<Image&>& GUI::getSelectedImages()
+vector<Image*>* GUI::getSelectedImages()
 {
-	// TODO: insert return statement here
-	//FALTA!!!!
+	if (!usrImgs.empty())
+	{
+		for (AllegroImage* image : usrImgs)
+		{
+			if (image->isSelected())
+			{
+				selectedImgs.push_back(image);
+			}
+		}
+		return &selectedImgs;
+	}
+	else
+	{
+		allegroError.setErrType(ErrType::NO_IMAGES_ADDED);
+		allegroError.setErrDetail(string("No saved images \n"));
+		return nullptr;
+	}
 }
 
 void GUI::clearDisplay()
@@ -160,26 +200,18 @@ void GUI::allegroDestroy()
 	}
 }
 
-bool GUI::drawBackround()
+void GUI::drawBackround()
 {
-	if (backround != nullptr) //si ya esta seteado el backround lo dibujo, sino error
-	{
-		al_draw_scaled_bitmap(backround,
-			0, 0,
-			al_get_bitmap_width(backround), al_get_bitmap_height(backround),
-			0, 0,
-			displaySize.width, displaySize.height, 0
-		);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	al_draw_scaled_bitmap(backround,
+		0, 0,
+		al_get_bitmap_width(backround), al_get_bitmap_height(backround),
+		0, 0,
+		displaySize.width, displaySize.height, 0
+	);
 }
 
-bool GUI::drawImages()
+void GUI::drawImages()
 {
 	//FALTAAA
-	return false;
+	
 }

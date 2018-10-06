@@ -8,6 +8,9 @@
 
 #define DWIDTH  1000 //DEFAULT DISPLAY SIZE
 #define DHEIGHT 600
+#define DEFAULT_PAGE_IMAGES 9 
+
+
 class DisplaySize
 {
 public:
@@ -18,36 +21,42 @@ public:
 class GUI
 {
 public:
-	GUI();
+	GUI(); //constructor y destructo de la clase
 	~GUI();
-	bool createUI(unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
+
+
+	bool createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES, unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
 	void closeUI();
 	bool needToRefresh();
 	void refresh();
-	bool finished();
+	bool finished();	
 	bool addImage(std::string path);
 	Error& getError();
-	std::vector<Image&>& getSelectedImages();
+	std::vector<Image*>* getSelectedImages();
 
 private:
 	ALLEGRO_EVENT_QUEUE* eventQueue;
 	ALLEGRO_DISPLAY* display;
 	Error allegroError;
 	ALLEGRO_BITMAP* backround;
+	DisplaySize displaySize;
+	
+	std::vector<AllegroImage*> usrImgs;	
+	std::vector<Image*> selectedImgs;
 
-
-	std::vector<AllegroImage> usrImgs;	
-	std::vector<AllegroImage&> selectedImgs;
+	unsigned int imagesPerPage;
+	unsigned int currentPage;
 
 
 	bool UIcreated;   //si la UI fue creada o no
-	void clearDisplay();
-	void drawScreenInterface();
+	bool done;
+
 	bool allegroInit();
 	void allegroDestroy();
-	bool drawBackround();
-	bool drawImages();
-	DisplaySize displaySize;
-	bool done;
+	void clearDisplay();
+	void drawScreenInterface();
+	void drawBackround();
+	void drawImages();
+	
 
 };
