@@ -1,7 +1,7 @@
 #include "Compressor.h"
 #include <iostream>
 
-int main(void)
+int main(int argc, char* argv[])
 {
 	//
 	Compressor hola;

@@ -17,6 +17,7 @@ AllegroImage::AllegroImage(std::string path_):Image(path_)
 	}
 	else
 	{
+		isOk = true;
 		selected = false;
 		onDisplay = false;
 	}
