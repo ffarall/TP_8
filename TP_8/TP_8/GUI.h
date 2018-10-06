@@ -17,7 +17,7 @@ public:
 	unsigned int width;
 	unsigned int height;
 };
-enum class EventType{ADD_POSSIBLE, EVENTS, HERE};
+enum class EventType{ERROR = -1, NO_EVENTS};
 class GUI
 {
 public:
@@ -27,7 +27,7 @@ public:
 
 	bool createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES, unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
 	void closeUI();
-	EventType needToRefresh();
+	bool needToRefresh();
 	void refresh();
 	bool finished();	
 	bool addImage(std::string path);
@@ -40,6 +40,7 @@ private:
 	Error allegroError;
 	ALLEGRO_BITMAP* backround;
 	DisplaySize displaySize;
+	EventType eventType;
 	
 	std::vector<AllegroImage*> usrImgs;	
 	std::vector<Image*> selectedImgs;
@@ -58,6 +59,12 @@ private:
 	void drawScreenInterface();
 	void drawBackround();
 	void drawImages();
+	bool filterEvent();
+	unsigned int keyToImg(const char pressedKey);
+	void turnPageLeft();
+	void turnPageRight();
+	void selectAll();
+	void deselectAll();
 	
 
 };
