@@ -4,11 +4,12 @@
 int main(int argc, char* argv[])
 {
 	//
-	Compressor hola;
-	if (hola.encode("test.png"))
+	Compressor hola("test.png",2);
+	if (hola.encode("veremos"))
 	{
-
-		if (hola.decode("test.eda"))
+		std::cout << "se pudo comprimir\n";
+		getchar();
+		if (hola.decode("veremos.eda"))
 		{
 			std::cout << "se pudo imprimir\n";
 		}

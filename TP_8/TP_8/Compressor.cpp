@@ -12,7 +12,7 @@ Compressor::Compressor() : pixelMatrix() , compressorError()
 	n = 0;
 }
 
-Compressor::Compressor(char * dataArray, double threshold_) : pixelMatrix()
+Compressor::Compressor(const char * dataArray, double threshold_) : pixelMatrix()
 {
 	Image png(dataArray);
 	
@@ -193,7 +193,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setR(tempPixel.getR());
 			}
-			if (minPixel.getR() > tempPixel.getR());
+			if (minPixel.getR() > tempPixel.getR())
 			{
 				minPixel.setR(tempPixel.getR());
 			}
@@ -201,7 +201,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setG(tempPixel.getG());
 			}
-			if (minPixel.getG() > tempPixel.getG());
+			if (minPixel.getG() > tempPixel.getG())
 			{
 				minPixel.setG(tempPixel.getG());
 			}
@@ -209,7 +209,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setB(tempPixel.getB());
 			}
-			if (minPixel.getB() > tempPixel.getB());
+			if (minPixel.getB() > tempPixel.getB())
 			{
 				minPixel.setB(tempPixel.getB());
 			}
@@ -217,7 +217,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setAlpha(tempPixel.getAlpha());
 			}
-			if (minPixel.getAlpha() > tempPixel.getAlpha());
+			if (minPixel.getAlpha() > tempPixel.getAlpha())
 			{
 				minPixel.setAlpha(tempPixel.getAlpha());
 			}
