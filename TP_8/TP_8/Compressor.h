@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include "Pixel.h"
+#include "Error.h"
 
 using namespace std;
 
@@ -17,6 +18,9 @@ public:
 	void init(char * dataArray, int n_);
 	bool encode();					// Creates compressed file from the pixelMatrix.
 	bool decode(const char * filename);	// Creates .png file from compressed file.
+	
+	bool isOk(void); // true if everything is ok, false si hay error
+	string getError(void);
 
 private:
 	Pixel getPixel(int x, int y);	// Method to treat pixelMatrix as a matrix (kind of implementing pointer's algebra).
@@ -26,6 +30,6 @@ private:
 	vector<Pixel> pixelMatrix;		// Matrix containing n*n Pixels.
 	unsigned int n;					// Pixels per side in matrix.
 	double threshold;
-
+	Error compressorError;
 };
 

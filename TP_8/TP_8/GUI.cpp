@@ -91,6 +91,7 @@ EventType GUI::needToRefresh()
 		allegroError.setErrType(ErrType::UI_NOT_CREATED);
 		allegroError.setErrDetail(string("Attempted operation while GUI not created \n") );
 	}
+	return EventType::ADD_POSSIBLE;//esta para que compile 
 }
 
 void GUI::refresh()

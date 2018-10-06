@@ -17,7 +17,7 @@ public:
 	unsigned int width;
 	unsigned int height;
 };
-enum class EventType{ADD_POSSIBLE EVENTS HERE};
+enum class EventType{ADD_POSSIBLE, EVENTS, HERE};
 class GUI
 {
 public:

@@ -7,7 +7,7 @@
 #define MY_FILE_EXTENTION "eda"
 
 
-Compressor::Compressor() : pixelMatrix()
+Compressor::Compressor() : pixelMatrix() , compressorError()
 {
 	n = 0;
 }
@@ -23,7 +23,7 @@ Compressor::Compressor(char * dataArray, double threshold_) : pixelMatrix()
 	{
 		if (lodepng_decode32_file(&tempArray, &n, &tempN, dataArray) != 0)
 		{
-			//es un error;
+			compressorError.setErrType(ErrType::ERROR_PNG);
 		}
 		else
 		{
@@ -49,64 +49,6 @@ void Compressor::init(char * dataArray, int n_)
 	}
 }
 
-bool Compressor::decode(const char * filename)
-{
-	string file(filename);
-	uint16_t c, d, e ,f;
-	
-	if (file.substr(file.find_last_of('.') + 1) != MY_FILE_EXTENTION)
-	{
-		return false; // if a wrong file is recieved, an error is sent 
-	}
-	
-	fstream archivo;
-	archivo.open(filename, fstream::in | fstream::out );
-	if (!archivo.is_open())
-	{
-		return false; //if is not posible to open de file, return error
-	}
-
-	c = archivo.get(); // tomo los primeros dos chars, que corresponden al size de la imagen
-	d = archivo.get();
-	e = archivo.get();
-	f = archivo.get();
-	if (c == EOF || d == EOF || e == EOF || f == EOF)// me fijo que sean caracteres validos
-	{
-		return false;
-	}
-
-	uint32_t size = (((c << 8) & 0xFF00) | (d & 0x00FF));// armo el valor de size
-	size <<= 16;
-	size |= (((e << 8) & 0xFF00) | (f & 0x00FF));
-	pixelMatrix.resize(size); //genero el vector de pixels
-
-	n = (unsigned int)sqrt(size);
-
-	
-	//dejo todo listo para empezar la recursion
-
-	decodeRec(archivo, n / 2, 0, n);
-
-	//en el vector pixel tengo todos los valores que tengo que pasar a char* para el encode32
-	vector<unsigned char> image;
-	image.resize(size * 4);
-	for (unsigned y = 0; y < n; y++)
-	{
-		for (unsigned x = 0; x < n; x++)
-		{
-			image[4 * n * y + 4 * x + 0] = getPixel(x,y).getR();
-			image[4 * n * y + 4 * x + 1] = getPixel(x,y).getG();
-			image[4 * n * y + 4 * x + 2] = getPixel(x,y).getB();
-			image[4 * n * y + 4 * x + 3] = 255/*getPixel(x,y).getAlpha()*/;
-		}
-	}
-	unsigned error = lodepng_encode32_file("nombre.png", &(*image.begin()) , n, n); // cambiar lo de nombre.png
-	
-	if (error) std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
-
-	archivo.close();
-	return true;
-}
 
 Pixel Compressor::getPixel(int x, int y)
 {
@@ -156,4 +98,75 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 	return true;
 }
 
+bool Compressor::decode(const char * filename)
+{
+	string file(filename);
+	uint16_t c;
+	uint32_t size = 0;
+
+	if (file.substr(file.find_last_of('.') + 1) != MY_FILE_EXTENTION)
+	{
+		return false; // if a wrong file is recieved, an error is sent 
+	}
+
+	fstream archivo;
+	archivo.open(filename, fstream::in | fstream::out);
+	if (!archivo.is_open())
+	{
+		return false; //if is not posible to open de file, return error
+	}
+
+	for (int i = 0; i < 4; i++) // tomo los primeros cuatro bytes para determinar la cantidad de pixeles qeu tendra la imagen
+	{
+		size <<= 8;
+		c = archivo.get();
+		if (c == EOF)
+		{
+			return false;
+		}
+		size |= (c & 0x00FF);
+	}
+
+	pixelMatrix.resize(size); //genero el vector de pixels
+
+	n = (unsigned int)sqrt(size); //guardo el tamaño
+
+
+	//dejo todo listo para empezar la recursion
+
+	decodeRec(archivo, n / 2, 0, n);
+
+	//en el vector pixel tengo todos los valores que tengo que pasar a char* para el encode32
+	vector<unsigned char> image;
+	image.resize(size * 4);
+	for (unsigned y = 0; y < n; y++)
+	{
+		for (unsigned x = 0; x < n; x++)
+		{
+			image[4 * n * y + 4 * x + 0] = getPixel(x, y).getR();
+			image[4 * n * y + 4 * x + 1] = getPixel(x, y).getG();
+			image[4 * n * y + 4 * x + 2] = getPixel(x, y).getB();
+			image[4 * n * y + 4 * x + 3] = getPixel(x, y).getAlpha();
+		}
+	}
+
+	int x = file.find_last_of('\\');
+	string exitName = file.substr(x == file.npos ? 0 : x, file.find_last_of('.') + 1) + "png"; // el png tendra el mismo nombre que el comprimido
+	unsigned error = lodepng_encode32_file(exitName.c_str(), &(*image.begin()), n, n);
+
+	if (error) std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+
+	archivo.close();
+	return true;
+}
+
+bool Compressor::isOk(void)
+{
+	return (compressorError.getErrType == ErrType::NO_ERROR);
+}
+
+string Compressor::getError(void)
+{
+	return compressorError.getErrDetail();
+}
 
