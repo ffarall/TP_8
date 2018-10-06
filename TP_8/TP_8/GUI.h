@@ -22,9 +22,7 @@ public:
 private:
 	ALLEGRO_EVENT_QUEUE* eventQueue;
 	ALLEGRO_DISPLAY* display;
-	ALLEGRO_TIMER* fpsTimer;
 	Error allegroError;
-	unsigned int FPS;
 	std::vector<AllegroImage> usrImages;
 	ALLEGRO_BITMAP* backround;
 	
