@@ -31,6 +31,8 @@ private:
 	vector<Pixel> pixelMatrix;		// Matrix containing n*n Pixels.
 	unsigned int n;					// Pixels per side in matrix.
 	double threshold;
+	Error compressorError;
+	ofstream compressedFile;
 
 };
 

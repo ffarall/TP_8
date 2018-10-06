@@ -3,7 +3,7 @@ class Pixel
 {
 public:
 	Pixel();
-	Pixel(const char * R_, const char * G_,const char * B_,const char * Alpha_);
+	Pixel(const char R_, const char G_,const char B_,const char Alpha_);
 
 	unsigned char getR(void);
 	unsigned char getG(void);
@@ -14,8 +14,6 @@ public:
 	void setB(unsigned char B_);
 	void setAlpha(unsigned char alpha_);
 	
-	void operator= (Pixel& source);
-
 	~Pixel();
 
 private:

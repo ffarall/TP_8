@@ -35,12 +35,24 @@ unsigned char Pixel::getAlpha(void)
 	return alpha;
 }
 
-void Pixel::operator=(Pixel & source)
+void Pixel::setR(unsigned char R_)
 {
-	R = source.R;
-	G = source.G;
-	B = source.B;
-	alpha = source.alpha;
+	R = R_;
+}
+
+void Pixel::setG(unsigned char G_)
+{
+	G = G_;
+}
+
+void Pixel::setB(unsigned char B_)
+{
+	B = B_;
+}
+
+void Pixel::setAlpha(unsigned char alpha_)
+{
+	alpha = alpha_;
 }
 
 Pixel::~Pixel()
