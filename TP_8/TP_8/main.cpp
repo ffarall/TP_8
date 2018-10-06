@@ -24,5 +24,6 @@ int main(int argc, char* argv[])
 		std::cout << "sorry bro, no comprimió bien" << std::endl;
 	}
 	std::cout << "fin de la trasmision...\n";
+	getchar()
 	return 0;
 }
