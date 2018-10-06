@@ -21,40 +21,51 @@ GUI::~GUI()
 	selectedImgs.clear();
 }
 
-bool GUI::createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES ,unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT)
+bool GUI::createUI(unsigned int ImagesPerPage_  ,unsigned int dWidth , unsigned int dHeight )
 {
-	bool retVal = true;
-	display = al_create_display(dWidth, dHeight);
-	if (display == NULL)
+	if (!usrImgs.empty())
 	{
-		allegroError.setErrType(ErrType::ALLEGRO_DISPLAY_ERROR);
-		allegroError.setErrDetail(string("Failed to create display\n"));
-		retVal = false;
-	}
-	eventQueue = al_create_event_queue();
-	if (eventQueue == NULL && retVal )
-	{
-		allegroError.setErrType(ErrType::ALLEGRO_QUEUE_ERROR);
-		allegroError.setErrDetail(string("Failed to create event queue\n"));
-		al_destroy_display(display);
-		retVal = false;
-	}
-	al_register_event_source(eventQueue, al_get_keyboard_event_source());
-	al_register_event_source(eventQueue, al_get_display_event_source(display));
-	backround = al_load_bitmap(BACKROUND_PATH);
-	if (backround == NULL && retVal)
-	{
-		allegroError.setErrType(ErrType::ALLEGRO_FAILED_IMAGE_LOAD);
-		allegroError.setErrDetail(string("Failed to load backround at ") + BACKROUND_PATH + '\n');
-		retVal = false;
-		al_destroy_event_queue(eventQueue);
-		al_destroy_display(display);
+		bool retVal = true;
+		display = al_create_display(dWidth, dHeight);
+		if (display == NULL)
+		{
+			allegroError.setErrType(ErrType::ALLEGRO_DISPLAY_ERROR);
+			allegroError.setErrDetail(string("Failed to create display\n"));
+			retVal = false;
+		}
+		eventQueue = al_create_event_queue();
+		if (eventQueue == NULL && retVal)
+		{
+			allegroError.setErrType(ErrType::ALLEGRO_QUEUE_ERROR);
+			allegroError.setErrDetail(string("Failed to create event queue\n"));
+			al_destroy_display(display);
+			retVal = false;
+		}
+		al_register_event_source(eventQueue, al_get_keyboard_event_source());
+		al_register_event_source(eventQueue, al_get_display_event_source(display));
+		backround = al_load_bitmap(BACKROUND_PATH);
+		if (backround == NULL && retVal)
+		{
+			allegroError.setErrType(ErrType::ALLEGRO_FAILED_IMAGE_LOAD);
+			allegroError.setErrDetail(string("Failed to load backround at ") + BACKROUND_PATH + '\n');
+			retVal = false;
+			al_destroy_event_queue(eventQueue);
+			al_destroy_display(display);
 
+		}
+		displaySize.height = dHeight;
+		displaySize.width = dWidth;
+		imagesPerPage = ImagesPerPage_;
+		configOnScreenImgs();
+		refresh();
+		return UIcreated = retVal;
 	}
-	displaySize.height = dHeight;
-	displaySize.width = dWidth;
-	imagesPerPage = ImagesPerPage_;
-	return UIcreated = retVal;
+	else
+	{
+		allegroError.setErrType(ErrType::NO_IMAGES_ADDED);
+		allegroError.setErrDetail(string("Cannot create UI if no images are loaded\n"));
+		return false;
+	}
 }
 
 void GUI::closeUI()
@@ -67,24 +78,27 @@ void GUI::closeUI()
 	}
 }
 
-bool GUI::needToRefresh()
+EventType GUI::needToRefresh()
 {
 	if (UIcreated)
 	{
-		return !al_is_event_queue_empty(eventQueue);
+		//chequear que el evento sea reelevante
+		//devolver el tipo de evento
+		//return !al_is_event_queue_empty(eventQueue);
 	}
 	else
 	{
 		allegroError.setErrType(ErrType::UI_NOT_CREATED);
 		allegroError.setErrDetail(string("Attempted operation while GUI not created \n") );
-		return false;
 	}
+	return EventType::ADD_POSSIBLE;//esta para que compile 
 }
 
 void GUI::refresh()
 {
 	if (UIcreated)
 	{
+		
 		clearDisplay();
 		drawBackround();
 		drawImages();
@@ -149,7 +163,7 @@ void GUI::clearDisplay()
 
 void GUI::drawScreenInterface()
 {
-	//FALTA!!!
+	//FALTA!!
 }
 
 bool GUI::allegroInit() //inicializa modulos de allegro usados
@@ -159,7 +173,7 @@ bool GUI::allegroInit() //inicializa modulos de allegro usados
 	{
 		if (al_init_image_addon())
 		{			
-			if (al_install_keyboard)
+			if (al_install_keyboard())
 			{
 				retVal = true;
 			}
@@ -200,6 +214,14 @@ void GUI::allegroDestroy()
 	}
 }
 
+void GUI::configOnScreenImgs()
+{
+	for (vector<AllegroImage*>::iterator it = usrImgs.begin(); it != usrImgs.end() && (*it) != usrImgs[imagesPerPage]; ++it) //todas las imagenes hasta que se termine el arreglo o llegue a la maxima cantidad van a la pantalla
+	{
+		(*it)->toggleOnDisplay();
+	}
+}
+
 void GUI::drawBackround()
 {
 	al_draw_scaled_bitmap(backround,
@@ -212,6 +234,6 @@ void GUI::drawBackround()
 
 void GUI::drawImages()
 {
-	//FALTAAA
+	
 	
 }
