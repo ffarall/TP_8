@@ -97,6 +97,7 @@ bool GUI::needToRefresh()
 		allegroError.setErrDetail(string("Attempted operation while GUI not created \n") );
 		return false;
 	}
+	return EventType::ADD_POSSIBLE;//esta para que compile 
 }
 
 void GUI::refresh()
@@ -180,7 +181,7 @@ bool GUI::allegroInit() //inicializa modulos de allegro usados
 	{
 		if (al_init_image_addon())
 		{			
-			if (al_install_keyboard)
+			if (al_install_keyboard())
 			{
 				retVal = true;
 			}

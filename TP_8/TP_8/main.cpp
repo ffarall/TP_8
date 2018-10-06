@@ -13,6 +13,17 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "murio intentando descomprimir\n";
 	}
+
+	Compressor hola2("test.png", 5);
+	if (hola.encode("test2"))
+	{
+		std::cout << "comprimió bien." << std::endl;
+	}
+	else
+	{
+		std::cout << "sorry bro, no comprimió bien" << std::endl;
+	}
 	std::cout << "fin de la trasmision...\n";
+	getchar();
 	return 0;
 }
