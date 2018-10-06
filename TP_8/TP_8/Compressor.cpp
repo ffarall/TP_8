@@ -21,9 +21,11 @@ Compressor::Compressor(char * dataArray, double threshold_) : pixelMatrix()
 
 	if (png.getFormat() == "png")
 	{
-		if (lodepng_decode32_file(&tempArray, &n, &tempN, dataArray) != 0)
+		unsigned error = lodepng_decode32_file(&tempArray, &n, &tempN, dataArray);
+		if ( error != 0)
 		{
 			compressorError.setErrType(ErrType::ERROR_PNG);
+			compressorError.setErrDetail(string(lodepng_error_text(error)));
 		}
 		else
 		{
