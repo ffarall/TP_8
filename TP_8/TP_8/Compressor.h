@@ -12,7 +12,7 @@ class Compressor
 {
 public:
 	Compressor();
-	Compressor(char * dataArray, double threshold_);
+	Compressor(const char * dataArray, double threshold_);
 	~Compressor();
 
 	void init(char * dataArray, int n_);

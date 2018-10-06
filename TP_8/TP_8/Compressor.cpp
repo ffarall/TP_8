@@ -12,7 +12,7 @@ Compressor::Compressor() : pixelMatrix() , compressorError()
 	n = 0;
 }
 
-Compressor::Compressor(char * dataArray, double threshold_) : pixelMatrix()
+Compressor::Compressor(const char * dataArray, double threshold_) : pixelMatrix()
 {
 	Image png(dataArray);
 	
@@ -51,8 +51,9 @@ void Compressor::init(char * dataArray, int n_)
 	}
 }
 
-bool Compressor::encode(const char * filename)
+bool Compressor::encode(const char * filename_)
 {
+	string filename = filename_ + '.' + string(MY_FILE_EXTENTION);
 	compressedFile.open(filename);
 	uint32_t imageSize = n * n * 4;				// There are n*n pixels, each containing 4 bytes. 
 	compressedFile << imageSize;				// First 4 bytes of the file determine the size. 
@@ -193,7 +194,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setR(tempPixel.getR());
 			}
-			if (minPixel.getR() > tempPixel.getR());
+			if (minPixel.getR() > tempPixel.getR())
 			{
 				minPixel.setR(tempPixel.getR());
 			}
@@ -201,7 +202,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setG(tempPixel.getG());
 			}
-			if (minPixel.getG() > tempPixel.getG());
+			if (minPixel.getG() > tempPixel.getG())
 			{
 				minPixel.setG(tempPixel.getG());
 			}
@@ -209,7 +210,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setB(tempPixel.getB());
 			}
-			if (minPixel.getB() > tempPixel.getB());
+			if (minPixel.getB() > tempPixel.getB())
 			{
 				minPixel.setB(tempPixel.getB());
 			}
@@ -217,7 +218,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 			{
 				maxPixel.setAlpha(tempPixel.getAlpha());
 			}
-			if (minPixel.getAlpha() > tempPixel.getAlpha());
+			if (minPixel.getAlpha() > tempPixel.getAlpha())
 			{
 				minPixel.setAlpha(tempPixel.getAlpha());
 			}

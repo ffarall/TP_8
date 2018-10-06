@@ -7,7 +7,7 @@ Pixel::Pixel()
 	R = G = B = alpha = 0;
 }
 
-Pixel::Pixel(const char R_, const char  G_, const char  B_, const char  Alpha_)
+Pixel::Pixel(const unsigned char R_, const unsigned char  G_, const unsigned char  B_, const unsigned char  Alpha_)
 {
 	R =R_;
 	G =G_;
