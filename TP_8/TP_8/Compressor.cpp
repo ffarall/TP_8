@@ -85,7 +85,7 @@ bool Compressor::decode(const char * filename)
 
 	if (file.substr(file.find_last_of('.') + 1) != MY_FILE_EXTENTION)
 	{
-		return false; // if a wrong file is recieved, an error is sent 
+		return false; // if a wrong file is received, an error is sent 
 	}
 
 	fstream archivo;
