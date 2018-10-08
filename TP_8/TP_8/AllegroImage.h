@@ -18,6 +18,9 @@ public:
 
 	ALLEGRO_BITMAP* getBitmap();
 	bool isSelected();
+	void select();
+	void deselect();
+	bool isOnDisplay();
 	void toggleSelect();
 	void toggleOnDisplay();
 	bool errorOcurred();

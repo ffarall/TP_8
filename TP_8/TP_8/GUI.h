@@ -8,7 +8,7 @@
 
 #define DWIDTH  1000 //DEFAULT DISPLAY SIZE
 #define DHEIGHT 600
-#define DEFAULT_PAGE_IMAGES 9 
+#define PAGE_IMAGES 9 
 
 
 class DisplaySize
@@ -25,7 +25,7 @@ public:
 	~GUI();
 
 
-	bool createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES, unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
+	bool createUI( unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
 	void closeUI();
 	bool needToRefresh();
 	void refresh();
@@ -37,8 +37,12 @@ public:
 private:
 	ALLEGRO_EVENT_QUEUE* eventQueue;
 	ALLEGRO_DISPLAY* display;
-	Error allegroError;
 	ALLEGRO_BITMAP* backround;
+	ALLEGRO_BITMAP* checkedBox;
+	ALLEGRO_BITMAP* uncheckedBox;
+	ALLEGRO_FONT* imageNameFont;
+	ALLEGRO_FONT* titleFont;
+	Error allegroError;
 	DisplaySize displaySize;
 	EventType eventType;
 	
@@ -65,6 +69,7 @@ private:
 	void turnPageRight();
 	void selectAll();
 	void deselectAll();
+	const char* pathToName(std::string path_);
 	
 
 };
