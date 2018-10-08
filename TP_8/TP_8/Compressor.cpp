@@ -236,7 +236,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 
 	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getG() - minPixel.getG(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
 
-	if (quadrantScore <= threshold)		// If the variation is less than the threshold established... 
+	if (quadrantScore * 100 <= threshold)		// If the variation is less than the threshold established... 
 	{
 		compressedFile << 'H';														// The program arrived to a leave of the quad tree. 
 		compressedFile << (char)((maxPixel.getR() + minPixel.getR()) / 2);				// Writing average RED to file. 
