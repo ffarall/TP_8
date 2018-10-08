@@ -133,6 +133,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="lodepng.h" />
+    <ClInclude Include="parse.h" />
     <ClInclude Include="Pixel.h" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="parse.c" />
     <ClCompile Include="Pixel.cpp" />
   </ItemGroup>
   <ItemGroup>

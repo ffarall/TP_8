@@ -25,14 +25,14 @@ public:
 private:
 	Pixel getPixel(int x, int y);	// Method to treat pixelMatrix as a matrix (kind of implementing pointer's algebra).
 	bool setPixel(Pixel& pixel_, unsigned int x, unsigned int y);
-	bool decodeRec(fstream& fp, int x, int y, int ancho);
+	bool decodeRec(std::fstream & fp, int x, int y, int ancho);
 	bool encodeRec(int x, int y, int n_);
 
 	vector<Pixel> pixelMatrix;		// Matrix containing n*n Pixels.
 	unsigned int n;					// Pixels per side in matrix.
 	double threshold;
 	Error compressorError;
-	ofstream compressedFile;
+	std::ofstream compressedFile;
 
 };
 

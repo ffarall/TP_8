@@ -1,16 +1,67 @@
 #include "Compressor.h"
 #include "GUI.h"
+#include "Image.h"
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
+extern "C" 
+{
+#include "parse.h"
+}
 using namespace boost::filesystem;
+
+
+struct util {
+	string path;
+	double threshold;
+	bool mode; //true comprimir, false descomprimir
+};
 
 int main(int argc, char* argv[])
 {
+	util datosCmd;
+	
+	int error = parseCmdLine(argc, argv, [](char * key, char * value, void* userData) {
+		util* externdata = (util *)userData;
+		int error=0;
+		if (key == NULL) // indica descomprimir o comprimir
+		{
+			if (str_cmp(value, "c")) // quiero comprimir
+			{
+				externdata->mode = true;
+			}
+			else if (str_cmp(value, "d")) //quiero descomprimir
+			{
+				externdata->mode = false;
+			}
+			else
+				error = 1;
+		}
+		else if (str_cmp(key, "path"))
+		{
+			externdata->path = string(value);
+		}
+		else if (str_cmp(key, "t"))
+		{
+			externdata->threshold = atof(value);
+		}
+		else
+			error = 1;
+
+		return error;
+	}, &datosCmd);
+	
+	if (error)
+	{
+		//how to use
+		return 0;
+	}
+	
 	GUI ui;
-	path p(argv[2]);  //estaria tomando el path suponiendo que llega como segundo parametro
+	path p(datosCmd.path);
 	string path;
+
 	if (exists(p))
 	{
 		if (is_regular_file(p))
@@ -20,9 +71,19 @@ int main(int argc, char* argv[])
 			/* Si es un directorio busco los archivos que necesite*/
 			for (directory_iterator itr(p); itr != directory_iterator(); itr++)
 			{
-				if (itr->path().extention().c_str() == ".png") // identifico si es png
+				if (datosCmd.mode) // quiero descomprimir 
 				{
-					ui.addImage(itr->path().string());
+					if (str_cmp(itr->path().extention().c_str(), ".png")) // identifico si es png
+					{
+						ui.addImage(itr->path().string());
+					}
+				}
+				else //quiero comprimir
+				{
+					if (str_cmp(itr->path().extention().c_str(),".eda")) // identifico si es mi extencion
+					{
+						ui.addImage(itr->path().string());
+					}
 				}
 			}
 		}
@@ -31,26 +92,24 @@ int main(int argc, char* argv[])
 		cout << p << "No existe\n";
 	getchar();
 
-	Compressor hola;
-	if (hola.decode("test.eda"))
+	ui.createUI(9);
+
+	while (!ui.finished())
 	{
-		std::cout << "se pudo imprimir\n";
-	}
-	else
-	{
-		std::cout << "murio intentando descomprimir\n";
+		if (ui.needToRefresh())
+		{
+			ui.refresh();
+		}
 	}
 
-	Compressor hola2("test.png", 5);
-	if (hola.encode("test2"))
+	vector<Image *> imagenVector = *(ui.getSelectedImages());
+	for (Image* imagen : imagenVector)
 	{
-		std::cout << "comprimió bien." << std::endl;
+		string path((*imagen).getPath() + string(".") + (*imagen).getFormat);
+		Compressor temp(path.c_str(), datosCmd.threshold);
+		temp.encode((*imagen).getPath().c_str());
 	}
-	else
-	{
-		std::cout << "sorry bro, no comprimió bien" << std::endl;
-	}
-	std::cout << "fin de la trasmision...\n";
+
 	getchar();
 	return 0;
 }
