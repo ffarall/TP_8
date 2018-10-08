@@ -2,6 +2,8 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
 #include"allegro5/display.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_ttf.h"
 #include"Error.h"
 #include"AllegroImage.h"
 #include<vector>

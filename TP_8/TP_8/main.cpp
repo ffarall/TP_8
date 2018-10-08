@@ -21,10 +21,11 @@ struct util {
 int main(int argc, char* argv[])
 {
 	util datosCmd;
-	
+	std::cout << argc << std::endl;
+	getchar();
 	int error = parseCmdLine(argc, argv, [](char * key, char * value, void* userData) {
 		util* externdata = (util *)userData;
-		int error=0;
+		int error=1;
 		if (key == NULL) // indica descomprimir o comprimir
 		{
 			if (str_cmp(value, "c")) // quiero comprimir
@@ -36,7 +37,7 @@ int main(int argc, char* argv[])
 				externdata->mode = false;
 			}
 			else
-				error = 1;
+				error = 0;
 		}
 		else if (str_cmp(key, "path"))
 		{
@@ -47,14 +48,16 @@ int main(int argc, char* argv[])
 			externdata->threshold = atof(value);
 		}
 		else
-			error = 1;
+			error = 0;
 
+		std::cout << value << " " << error << std::endl;
 		return error;
 	}, &datosCmd);
 	
-	if (error)
+	if (!error)
 	{
-		//how to use
+		cout << "error\n";
+		getchar();
 		return 0;
 	}
 	
@@ -73,14 +76,14 @@ int main(int argc, char* argv[])
 			{
 				if (datosCmd.mode) // quiero descomprimir 
 				{
-					if (str_cmp(itr->path().extention().c_str(), ".png")) // identifico si es png
+					if ( ((itr->path()).extension()) ==  ".png") // identifico si es png
 					{
 						ui.addImage(itr->path().string());
 					}
 				}
 				else //quiero comprimir
 				{
-					if (str_cmp(itr->path().extention().c_str(),".eda")) // identifico si es mi extencion
+					if ((itr->path()).extension() == ".eda") // identifico si es mi extencion
 					{
 						ui.addImage(itr->path().string());
 					}
@@ -90,9 +93,18 @@ int main(int argc, char* argv[])
 	}
 	else
 		cout << p << "No existe\n";
+
+	cout << "Listo los archivos\n"; //hasta aca funciona, mas abajo muere en algun lado
 	getchar();
 
-	ui.createUI(9);
+	if (!ui.createUI())
+	{
+		cout << ui.getError().getErrDetail() << endl;
+		return 0;
+	}
+	cout << "hola\n";
+	cout << ui.getError().getErrDetail() << endl;
+	getchar();
 
 	while (!ui.finished())
 	{
@@ -105,11 +117,12 @@ int main(int argc, char* argv[])
 	vector<Image *> imagenVector = *(ui.getSelectedImages());
 	for (Image* imagen : imagenVector)
 	{
-		string path((*imagen).getPath() + string(".") + (*imagen).getFormat);
+		string path((*imagen).getPath() + string(".") + (*imagen).getFormat());
 		Compressor temp(path.c_str(), datosCmd.threshold);
 		temp.encode((*imagen).getPath().c_str());
 	}
 
+	ui.closeUI();
 	getchar();
 	return 0;
 }

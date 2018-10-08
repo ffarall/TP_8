@@ -252,7 +252,7 @@ bool GUI::allegroInit() //inicializa modulos de allegro usados
 			{
 				if (al_init_font_addon())
 				{
-					if (al_init_ttf_addon)
+					if (al_init_ttf_addon())
 					{
 						retVal = true;
 					}
@@ -335,9 +335,9 @@ void GUI::drawBackround()
 void GUI::drawImages()
 {
 	bool error = false;
-	for (int i = 0; i < imagesPerPage/3 && !error; i++)
+	for (unsigned int i = 0; i < imagesPerPage/3 && !error; i++)
 	{
-		for(int j = 0; j<imagesPerPage/3 && !error ;j++)
+		for(unsigned int j = 0; j<imagesPerPage/3 && !error ;j++)
 		{
 			if ((i * 3 + j) < usrImgs.size())
 			{
@@ -350,7 +350,7 @@ void GUI::drawImages()
 				);
 				al_draw_text(imageNameFont, al_map_rgb(0, 0, 0), X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j), Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*(i + 1)), 0, pathToName(usrImgs[i * 3 + j]->getPath()));
 
-				if (usrImgs[i * 3 + j]->isSelected)
+				if (usrImgs[i * 3 + j]->isSelected())
 				{
 					al_draw_bitmap(checkedBox, (X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j))+PX_CORRECT, (Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*i))+PX_CORRECT,0);
 				}
@@ -372,9 +372,9 @@ void GUI::drawImages()
 bool GUI::filterEvent()
 {
 	bool retVal;
-	ALLEGRO_EVENT* receivedEv;
-	al_get_next_event(eventQueue, receivedEv);
-	switch (receivedEv->type)
+	ALLEGRO_EVENT receivedEv;
+	al_get_next_event(eventQueue, &receivedEv);
+	switch (receivedEv.type)
 	{
 	case ALLEGRO_EVENT_DISPLAY_CLOSE:
 		done = true;
@@ -382,7 +382,7 @@ bool GUI::filterEvent()
 		retVal= false;
 		break;
 	case ALLEGRO_EVENT_KEY_UP:
-		switch (receivedEv->keyboard.keycode)
+		switch (receivedEv.keyboard.keycode)
 		{
 		case ALLEGRO_KEY_LEFT:
 			turnPageLeft();
@@ -411,9 +411,9 @@ bool GUI::filterEvent()
 		}		
 		break;
 	case ALLEGRO_EVENT_KEY_CHAR:
-		if (receivedEv->keyboard.unichar >= '1' && receivedEv->keyboard.unichar <= '9')
+		if (receivedEv.keyboard.unichar >= '1' && receivedEv.keyboard.unichar <= '9')
 		{
-			usrImgs[keyToImg(receivedEv->keyboard.unichar)]->toggleSelect();
+			usrImgs[keyToImg(receivedEv.keyboard.unichar)]->toggleSelect();
 			retVal = true;
 		}
 		break;
@@ -437,9 +437,9 @@ void GUI::turnPageLeft()
 	{
 		int i = 0;
 		while (!usrImgs[i++]->isOnDisplay());
-		for (int j = i-imagesPerPage; j < i + imagesPerPage && j < usrImgs.size(); j++)
+		for (unsigned int j = i-imagesPerPage; j < i + imagesPerPage && j < usrImgs.size(); j++)
 		{
-			usrImgs[j]->toggleOnDisplay;
+			usrImgs[j]->toggleOnDisplay();
 		}
 	}
 }
@@ -450,9 +450,9 @@ void GUI::turnPageRight()
 	{
 		int i = 0;
 		while (!usrImgs[i++]->isOnDisplay());
-		for (int j = i ; j < i + 2*imagesPerPage && j < usrImgs.size(); j++)
+		for (unsigned int j = i ; j < i + 2*imagesPerPage && j < usrImgs.size(); j++)
 		{
-			usrImgs[j]->toggleOnDisplay;
+			usrImgs[j]->toggleOnDisplay();
 		}
 	}
 }
@@ -476,7 +476,8 @@ void GUI::deselectAll()
 
 const char * GUI::pathToName(std::string path_)
 {
-	if (size_t pos = path_.find_last_of('\\') != string::npos && (pos - path_.find_last_of('.')) < MAX_NAME_CHARS)
+	size_t pos = 0;
+	if (pos = path_.find_last_of('\\') != string::npos && (pos - path_.find_last_of('.')) < MAX_NAME_CHARS)
 	{
 		return (path_.c_str())+pos;
 	}
