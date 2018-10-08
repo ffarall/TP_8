@@ -5,7 +5,7 @@
 #include <fstream>
 
 #define MY_FILE_EXTENTION "eda"
-#define BYTE_1_MASK 0x000F
+#define BYTE_1_MASK 0x00FF
 
 
 Compressor::Compressor() : pixelMatrix() , compressorError()
@@ -248,7 +248,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 	else
 	{
 		compressedFile << 'N';				// Since the variation is higher than the threshold, a new node is created. 
-		return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
+        return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
 	}
 }
 
