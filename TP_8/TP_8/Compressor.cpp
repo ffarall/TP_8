@@ -5,6 +5,7 @@
 #include <fstream>
 
 #define MY_FILE_EXTENTION "eda"
+#define BYTE_1_MASK 0x000F
 
 
 Compressor::Compressor() : pixelMatrix() , compressorError()
@@ -53,19 +54,27 @@ void Compressor::init(char * dataArray, int n_)
 
 bool Compressor::encode(const char * filename_)
 {
-	string filename = filename_ + '.' + string(MY_FILE_EXTENTION);
+	string filename(string(filename_) + "." + string(MY_FILE_EXTENTION));
 	compressedFile.open(filename);
-	uint32_t imageSize = n * n * 4;				// There are n*n pixels, each containing 4 bytes. 
-	compressedFile << imageSize;				// First 4 bytes of the file determine the size. 
+	uint32_t imageSize = n * n;					// There are n*n pixels.
+	char byte0 = imageSize & BYTE_1_MASK;
+	char byte1 = (imageSize >> 8) & BYTE_1_MASK;
+	char byte2 = (imageSize >> 16) & BYTE_1_MASK;
+	char byte3 = (imageSize >> 24) & BYTE_1_MASK;
+	compressedFile << byte3 << byte2 << byte1 << byte0;				// First 4 bytes of the file determine the size. 
 
 	if (n == 1)
 	{
-		compressedFile << getPixel(0, 0).getR() << getPixel(0, 0).getG() << getPixel(0, 0).getB() << getPixel(0, 0).getAlpha();		// Borderline case: if the image is 1 pixel in size.
+		compressedFile << 'H';
+		compressedFile << (char)getPixel(0, 0).getR() << (char)getPixel(0, 0).getG() << (char)getPixel(0, 0).getB() << (char)getPixel(0, 0).getAlpha();		// Borderline case: if the image is 1 pixel in size.
 		return true;
 	}
 	compressedFile << 'N';						// After the size, comes the first node, whenever the image is bigger than 1 pixel. 
 
-	return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
+	bool ret = (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
+
+	compressedFile.close();
+	return ret;
 }
 
 bool Compressor::decode(const char * filename)
@@ -227,13 +236,13 @@ bool Compressor::encodeRec(int x, int y, int n_)
 
 	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getG() - minPixel.getG(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
 
-	if (quadrantScore < threshold)		// If the variation is less than the threshold established... 
+	if (quadrantScore <= threshold)		// If the variation is less than the threshold established... 
 	{
 		compressedFile << 'H';														// The program arrived to a leave of the quad tree. 
-		compressedFile << ((maxPixel.getR() + minPixel.getR()) / 2);				// Writing average RED to file. 
-		compressedFile << ((maxPixel.getG() + minPixel.getG()) / 2);				// Writing average GREEN to file. 
-		compressedFile << ((maxPixel.getB() + minPixel.getB()) / 2);				// Writing average BLUE to file. 
-		compressedFile << ((maxPixel.getAlpha() + minPixel.getAlpha()) / 2);		// Writing average ALPHA to file. 
+		compressedFile << (char)((maxPixel.getR() + minPixel.getR()) / 2);				// Writing average RED to file. 
+		compressedFile << (char)((maxPixel.getG() + minPixel.getG()) / 2);				// Writing average GREEN to file. 
+		compressedFile << (char)((maxPixel.getB() + minPixel.getB()) / 2);				// Writing average BLUE to file. 
+		compressedFile << (char)((maxPixel.getAlpha() + minPixel.getAlpha()) / 2);		// Writing average ALPHA to file. 
 		return true;
 	}
 	else
