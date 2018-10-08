@@ -2,13 +2,15 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
 #include"allegro5/display.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_ttf.h"
 #include"Error.h"
 #include"AllegroImage.h"
 #include<vector>
 
 #define DWIDTH  1000 //DEFAULT DISPLAY SIZE
 #define DHEIGHT 600
-#define DEFAULT_PAGE_IMAGES 9 
+#define PAGE_IMAGES 9 
 
 
 class DisplaySize
@@ -17,7 +19,7 @@ public:
 	unsigned int width;
 	unsigned int height;
 };
-enum class EventType{ADD_POSSIBLE, EVENTS, HERE};
+enum class EventType{ERROR = -1, NO_EVENTS};
 class GUI
 {
 public:
@@ -25,9 +27,9 @@ public:
 	~GUI();
 
 
-	bool createUI(unsigned int ImagesPerPage_ = DEFAULT_PAGE_IMAGES, unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
+	bool createUI( unsigned int dWidth = DWIDTH, unsigned int dHeight = DHEIGHT);
 	void closeUI();
-	EventType needToRefresh();
+	bool needToRefresh();
 	void refresh();
 	bool finished();	
 	bool addImage(std::string path);
@@ -37,9 +39,14 @@ public:
 private:
 	ALLEGRO_EVENT_QUEUE* eventQueue;
 	ALLEGRO_DISPLAY* display;
-	Error allegroError;
 	ALLEGRO_BITMAP* backround;
+	ALLEGRO_BITMAP* checkedBox;
+	ALLEGRO_BITMAP* uncheckedBox;
+	ALLEGRO_FONT* imageNameFont;
+	ALLEGRO_FONT* titleFont;
+	Error allegroError;
 	DisplaySize displaySize;
+	EventType eventType;
 	
 	std::vector<AllegroImage*> usrImgs;	
 	std::vector<Image*> selectedImgs;
@@ -58,6 +65,13 @@ private:
 	void drawScreenInterface();
 	void drawBackround();
 	void drawImages();
+	bool filterEvent();
+	unsigned int keyToImg(const char pressedKey);
+	void turnPageLeft();
+	void turnPageRight();
+	void selectAll();
+	void deselectAll();
+	const char* pathToName(std::string path_);
 	
 
 };

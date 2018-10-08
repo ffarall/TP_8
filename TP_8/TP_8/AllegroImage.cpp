@@ -1,5 +1,7 @@
 #include "AllegroImage.h"
 using namespace std;
+
+#define DEFAULT_IMAGE "default.png"
 AllegroImage::AllegroImage():Image()
 {
 	selected = false;
@@ -13,7 +15,17 @@ AllegroImage::AllegroImage(std::string path_):Image(path_)
 	bitmap = al_load_bitmap(path_.c_str());
 	if (bitmap == NULL)
 	{
-		isOk = false;
+		bitmap = al_load_bitmap(DEFAULT_IMAGE);
+		if (bitmap == NULL)
+		{
+			isOk = false;
+		}
+		else
+		{
+			isOk = true;
+			selected = false;
+			onDisplay = false;
+		}
 	}
 	else
 	{
@@ -36,7 +48,17 @@ void AllegroImage::setPath(std::string path_)
 	bitmap = al_load_bitmap(path_.c_str());
 	if (bitmap == NULL)
 	{
-		isOk = false;
+		bitmap = al_load_bitmap(DEFAULT_IMAGE);
+		if (bitmap == NULL)
+		{
+			isOk = false;
+		}
+		else
+		{
+			isOk = true;
+			selected = false;
+			onDisplay = false;
+		}
 	}
 	else
 	{
@@ -55,6 +77,21 @@ ALLEGRO_BITMAP * AllegroImage::getBitmap()
 bool AllegroImage::isSelected()
 {
 	return selected;
+}
+
+void AllegroImage::select()
+{
+	selected = true;
+}
+
+void AllegroImage::deselect()
+{
+	selected = false;
+}
+
+bool AllegroImage::isOnDisplay()
+{
+	return onDisplay;
 }
 
 void AllegroImage::toggleSelect()
