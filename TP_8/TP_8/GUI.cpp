@@ -27,6 +27,7 @@ GUI::GUI()
 	usrImgs.clear();
 	selectedImgs.clear();
 	UIcreated = false;
+	done = false;
 }
 
 GUI::~GUI()
@@ -188,7 +189,7 @@ void GUI::refresh()
 
 bool GUI::finished()
 {
-	return !done;
+	return done;
 }
 
 bool GUI::addImage(std::string path)
@@ -324,7 +325,9 @@ void GUI::allegroDestroy()
 
 void GUI::configOnScreenImgs()
 {
-	for (vector<AllegroImage*>::iterator it = usrImgs.begin(); it != usrImgs.end() && (*it) != usrImgs[imagesPerPage]; ++it) //todas las imagenes hasta que se termine el arreglo o llegue a la maxima cantidad van a la pantalla
+	int i;
+	vector<AllegroImage*>::iterator it;
+	for (it = usrImgs.begin(), i = 0; it != usrImgs.end() && i < imagesPerPage; ++it, i++) //todas las imagenes hasta que se termine el arreglo o llegue a la maxima cantidad van a la pantalla
 	{
 		(*it)->toggleOnDisplay();
 	}

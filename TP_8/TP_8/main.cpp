@@ -105,7 +105,6 @@ int main(int argc, char* argv[])
 	}
 	cout << "hola\n";
 	cout << ui.getError().getErrDetail() << endl;
-	getchar();
 
 	while (!ui.finished())
 	{
