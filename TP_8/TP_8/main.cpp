@@ -11,6 +11,7 @@ extern "C"
 }
 using namespace boost::filesystem;
 
+void howToUse(void);
 
 struct util {
 	string path;
@@ -20,7 +21,7 @@ struct util {
 
 int main(int argc, char* argv[])
 {
-	/*util datosCmd;
+	util datosCmd;
 	std::cout << argc << std::endl;
 	getchar();
 	int error = parseCmdLine(argc, argv, [](char * key, char * value, void* userData) {
@@ -57,6 +58,7 @@ int main(int argc, char* argv[])
 	if (!error)
 	{
 		cout << "error\n";
+		howToUse();
 		getchar();
 		return 0;
 	}
@@ -71,7 +73,7 @@ int main(int argc, char* argv[])
 			cout << p << " is not a directory to find files " << '\n';
 		else if (is_directory(p))
 		{
-			/* Si es un directorio busco los archivos que necesite
+			/* Si es un directorio busco los archivos que necesite*/
 			for (directory_iterator itr(p); itr != directory_iterator(); itr++)
 			{
 				if (datosCmd.mode) // quiero descomprimir 
@@ -120,16 +122,26 @@ int main(int argc, char* argv[])
 		string path((*imagen).getPath() + string(".") + (*imagen).getFormat());
 		Compressor temp(path.c_str(), datosCmd.threshold);
 		temp.encode((*imagen).getPath().c_str());
-	}*/
+	}
 
-	Compressor hola("fotos\\imagen4.png", 10);
-		//ui.closeUI();
-	hola.encode("salida");
+	//Compressor hola("fotos\\imagen4.png", 10);
+	ui.closeUI();
+	/*hola.encode("salida");
 	if (hola.isOk())
 	{
 		hola.decode("salida.eda");
-	}
+	}*/
 	cout << "finito\n";
 	getchar();
 	return 0;
+}
+
+void howToUse(void)
+{
+	cout << "Se ha producido un error al intentar utilizar el compresor/descompresor\n";
+	cout << "El programa funciona recibiendo dos opciones y un parametro: \n";
+	cout << "\t-> -path y el directorio en el cual se encuetran los archivos que desea comprimir o descomprimir\n";
+	cout << "\t-> -t y un numero entre 0 y 100 para indicar el threshold con el que se quiere comprimir";
+	cout << "\t-> 'd' o 'c' si se desea descomprimir o comprimir respectivamente \n";
+	cout << "Por favor ejecute denuevo el programa con los las variables correspondientes\n";
 }
