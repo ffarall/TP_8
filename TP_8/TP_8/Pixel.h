@@ -3,8 +3,8 @@ class Pixel
 {
 public:
 	Pixel();
-	Pixel(const unsigned char R_, const unsigned char G_,const unsigned char B_,const unsigned char Alpha_);
-
+	Pixel(const unsigned char R_, const unsigned char G_, const unsigned char B_, const unsigned char Alpha_);
+	
 	unsigned char getR(void);
 	unsigned char getG(void);
 	unsigned char getB(void);

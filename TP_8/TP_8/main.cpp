@@ -122,13 +122,14 @@ int main(int argc, char* argv[])
 		temp.encode((*imagen).getPath().c_str());
 	}*/
 
-Compressor hola("fotos\\test2.png", 10);
-	//ui.closeUI();
-hola.encode("salida");
-if (hola.isOk())
-{
-	hola.decode("salida.eda");
-}
+	Compressor hola("fotos\\imagen4.png", 10);
+		//ui.closeUI();
+	hola.encode("salida");
+	if (hola.isOk())
+	{
+		hola.decode("salida.eda");
+	}
+	cout << "finito\n";
 	getchar();
 	return 0;
 }

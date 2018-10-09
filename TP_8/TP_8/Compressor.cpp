@@ -48,7 +48,7 @@ void Compressor::init(char * dataArray, int n_)
 	n = n_;
 	for (unsigned int i = 0; i < n * n; i++)
 	{
-		pixelMatrix.push_back(Pixel(*(dataArray + i + 1), *(dataArray + i + 2), *(dataArray + i + 3), *(dataArray + i + 4)));	// Add n*n Pixels initialised with (red, green, blue, alfa).
+		pixelMatrix.push_back(Pixel(*(dataArray + i*4 ), *(dataArray + i*4 + 1), *(dataArray + i*4 + 2), *(dataArray + i*4 + 3)));	// Add n*n Pixels initialised with (red, green, blue, alfa).
 	}
 }
 
@@ -189,8 +189,8 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 
 bool Compressor::encodeRec(int x, int y, int n_)
 {
-	Pixel maxPixel;
-	Pixel minPixel(255, 255, 255, 255);
+	Pixel maxPixel = getPixel(x,y) ;
+	Pixel minPixel = getPixel(x, y);
 	Pixel tempPixel;
 
 	for (int i = 0; i < n_; i++)
@@ -236,7 +236,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 
 	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getG() - minPixel.getG(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
 
-	if (quadrantScore * 100 <= threshold)		// If the variation is less than the threshold established... 
+	if (quadrantScore <= threshold)		// If the variation is less than the threshold established... 
 	{
 		compressedFile << 'H';														// The program arrived to a leave of the quad tree. 
 		compressedFile << (char)((maxPixel.getR() + minPixel.getR()) / 2);				// Writing average RED to file. 
