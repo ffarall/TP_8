@@ -19,6 +19,9 @@
 #define IMAGE_SPACE 10
 #define MAX_NAME_CHARS 10
 #define PX_CORRECT 10
+#define Y_PX_CORRECT (-1*(displaySize.height * 20.0/600))
+#define X_PX_CORRECT (displaySize.width * 0.1)
+
 
 using namespace std;
 GUI::GUI()
@@ -359,7 +362,7 @@ void GUI::drawImages()
 					X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j), Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*i),
 					(0.82*displaySize.width / 3) - 2 * IMAGE_SPACE, (0.675*displaySize.height / 3) - 2 * IMAGE_SPACE, 0
 				);
-				al_draw_text(imageNameFont, al_map_rgb(0, 0, 0), X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j), Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*(i + 1)), 0, pathToName(usrImgs[i * 3 + j]->getPath()));
+				al_draw_text(imageNameFont, al_map_rgb(0, 0, 0),X_PX_CORRECT+X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j), Y_PX_CORRECT + Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*(i + 1)), 0, pathToName(usrImgs[i * 3 + j]->getPath()));
 
 				if (usrImgs[i * 3 + j]->isSelected())
 				{
@@ -424,8 +427,11 @@ bool GUI::filterEvent()
 	case ALLEGRO_EVENT_KEY_CHAR:
 		if (receivedEv.keyboard.unichar >= '1' && receivedEv.keyboard.unichar <= '9')
 		{
-			usrImgs[keyToImg(receivedEv.keyboard.unichar)]->toggleSelect();
-			retVal = true;
+			if (((receivedEv.keyboard.unichar - '1') * (currentPage +1) ) < usrImgs.size())
+			{
+				usrImgs[keyToImg(receivedEv.keyboard.unichar)]->toggleSelect();
+				retVal = true;
+			}			
 		}
 		break;
 	default:
@@ -488,7 +494,7 @@ void GUI::deselectAll()
 const char * GUI::pathToName(std::string path_)
 {
 	size_t pos = 0;
-	if (pos = path_.find_last_of('\\') != string::npos && (pos - path_.find_last_of('.')) < MAX_NAME_CHARS)
+	if (pos = path_.find_last_of('\\') != string::npos && (pos) < MAX_NAME_CHARS)
 	{
 		return (path_.c_str())+pos;
 	}
