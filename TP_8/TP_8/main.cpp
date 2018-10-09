@@ -20,7 +20,7 @@ struct util {
 
 int main(int argc, char* argv[])
 {
-	/*util datosCmd;
+	util datosCmd;
 	std::cout << argc << std::endl;
 	getchar();
 	int error = parseCmdLine(argc, argv, [](char * key, char * value, void* userData) {
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 			cout << p << " is not a directory to find files " << '\n';
 		else if (is_directory(p))
 		{
-			/* Si es un directorio busco los archivos que necesite
+			/* Si es un directorio busco los archivos que necesite*/
 			for (directory_iterator itr(p); itr != directory_iterator(); itr++)
 			{
 				if (datosCmd.mode) // quiero descomprimir 
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 		string path((*imagen).getPath() + string(".") + (*imagen).getFormat());
 		Compressor temp(path.c_str(), datosCmd.threshold);
 		temp.encode((*imagen).getPath().c_str());
-	}*/
+	}
 
 	Compressor hola("fotos\\imagen4.png", 10);
 		//ui.closeUI();
