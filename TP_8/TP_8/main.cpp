@@ -96,28 +96,18 @@ int main(int argc, char* argv[])
 	for (Image* imagen : imagenVector)
 	{
 		string path((*imagen).getPath());
-		if (datosCmd.mode)
-		{
-			Compressor temp(path.c_str(), datosCmd.threshold);
-			if(temp.isOk())
-			{
-				temp.encode(path.substr(0, path.find_last_of('.')).c_str());
-			}
-			else
-			{
-				std::cout << "Unable to compress: " << path << "\n";
-				std::cout << temp.getError() << std::endl;
-			}
-			
-		}
-		else
-		{
-			Compressor temp2;
-			temp2.decode(path.c_str());
-		}
+		Compressor temp(path.c_str(), datosCmd.threshold);
+		temp.encode((*imagen).getPath().substr(0, (*imagen).getPath().find_last_of('.')).c_str());
 	}
 
-	cout << "finito\n Presione enter para finalizar\n";
+	//Compressor hola("fotos\\imagen4.png", 10);
+	
+	/*hola.encode("salida");
+	if (hola.isOk())
+	{
+		hola.decode("salida.eda");
+	}*/
+	cout << "finito\n";
 	getchar();
 	return 0;
 }

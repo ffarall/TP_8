@@ -253,7 +253,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 	else
 	{
 		compressedFile << 'N';				// Since the variation is higher than the threshold, a new node is created. 
-        return (encodeRec(x + n_ / 2, y + 0, n_ / 2) && encodeRec(x , y , n_ / 2) && encodeRec(x ,y + n_ / 2, n_ / 2) && encodeRec(x +n_ / 2,y +  n_ / 2, n_ / 2));
+        return (encodeRec(n_ / 2, 0, n_ / 2) && encodeRec(0, 0, n_ / 2) && encodeRec(0, n_ / 2, n_ / 2) && encodeRec(n_ / 2, n_ / 2, n_ / 2));
 	}
 }
 
