@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 {
 	string a("C:\\Users\\arrib\\source\\repos\\TP_8\\TP_8\\TP_8\\fotos"); 
 	//a.clear();
-	util datosCmd = {a,10,false}; // por defecto tiene un threshold y comprime
+	util datosCmd = {a,0, false}; // por defecto tiene un threshold y comprime
 
 	int error = parseCmdLine(argc, argv, callback , &datosCmd);
 	

@@ -129,9 +129,9 @@ bool Compressor::decode(const char * filename)
 		}
 	}
 
-	size_t x = file.find_last_of('\\')+1;
-	size_t dot = file.find_last_of('.') + 1;
-	string exitName = file.substr(x == file.npos ? 0 : x,dot-x ) + "png"; // el png tendra el mismo nombre que el comprimido
+	
+	size_t dot = file.find_last_of('.');
+	string exitName = file.substr(0,dot+1) + "png"; // el png tendra el mismo nombre que el comprimido
 	unsigned error = lodepng_encode32_file(exitName.c_str(), &(*image.begin()), n, n);
 
 	if (error) std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
