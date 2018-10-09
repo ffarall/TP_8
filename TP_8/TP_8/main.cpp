@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	cout << "finito\n Presione enter para finalizar\n";
+	cout << "finito\nPresione enter para finalizar\n";
 	getchar();
 	return 0;
 }
