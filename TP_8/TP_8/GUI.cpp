@@ -367,7 +367,7 @@ void GUI::drawImages()
 				}
 				else
 				{
-
+					al_draw_bitmap(uncheckedBox, (X_START(displaySize.width) + ((IMAGE_SPACE + 0.82*displaySize.width / 3)*j)) + PX_CORRECT, (Y_START(displaySize.height) + ((IMAGE_SPACE + 0.675*displaySize.height / 3)*i)) + PX_CORRECT, 0);
 				}
 			}
 			else
@@ -382,7 +382,7 @@ void GUI::drawImages()
 
 bool GUI::filterEvent()
 {
-	bool retVal;
+	bool retVal = false;
 	ALLEGRO_EVENT receivedEv;
 	al_get_next_event(eventQueue, &receivedEv);
 	switch (receivedEv.type)
