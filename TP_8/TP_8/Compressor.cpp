@@ -34,7 +34,7 @@ Compressor::Compressor(const char * dataArray, double threshold_) : pixelMatrix(
 		}
 	}
 
-	threshold = (threshold_ * 255 / 100);
+	threshold = (threshold_ * 255 * 4 / 100);
 	
 }
 
@@ -129,8 +129,9 @@ bool Compressor::decode(const char * filename)
 		}
 	}
 
-	size_t x = file.find_last_of('\\');
-	string exitName = file.substr(x == file.npos ? 0 : x, file.find_last_of('.') + 1) + "png"; // el png tendra el mismo nombre que el comprimido
+	
+	size_t dot = file.find_last_of('.');
+	string exitName = file.substr(0,dot+1) + "png"; // el png tendra el mismo nombre que el comprimido
 	unsigned error = lodepng_encode32_file(exitName.c_str(), &(*image.begin()), n, n);
 
 	if (error) std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
@@ -189,8 +190,8 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 
 bool Compressor::encodeRec(int x, int y, int n_)
 {
-	Pixel maxPixel = getPixel(x, y) ;
-	Pixel minPixel = getPixel(x, y);
+	Pixel maxPixel = Pixel() ;
+	Pixel minPixel = Pixel(255,255,255,255);
 	Pixel tempPixel;
 
 	for (int i = 0; i < n_; i++)
@@ -252,7 +253,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 	else
 	{
 		compressedFile << 'N';				// Since the variation is higher than the threshold, a new node is created. 
-        return (encodeRec(n_ / 2 + x, 0 + y, n_ / 2) && encodeRec(0 + x, 0 + y, n_ / 2) && encodeRec(0 + x, n_ / 2 + y, n_ / 2) && encodeRec(n_ / 2 + x, n_ / 2 + y, n_ / 2));
+        return (encodeRec(x + n_ / 2, y + 0, n_ / 2) && encodeRec(x , y , n_ / 2) && encodeRec(x ,y + n_ / 2, n_ / 2) && encodeRec(x +n_ / 2,y +  n_ / 2, n_ / 2));
 	}
 }
 

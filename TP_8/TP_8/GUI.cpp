@@ -10,7 +10,7 @@
 #define IMAGE_NAME_FONT_PATH "imageName.ttf"
 #define IMAGE_NAME_FONT_SIZE 10
 #define TITLE_FONT_PATH "titleFont.ttf"
-#define TITLE_FONT_SIZE 30
+#define TITLE_FONT_SIZE 15
 #define BACKROUND_PATH "backround.png"
 #define CHECKED_BOX_PATH "checkedBox.png"
 #define UNCHECKED_BOX_PATH "uncheckedBox.png"
@@ -36,16 +36,24 @@ GUI::GUI()
 GUI::~GUI()
 {
 	allegroDestroy();
-	for (vector<AllegroImage*>::iterator it = usrImgs.begin(); it != usrImgs.end() && (*it) != usrImgs[imagesPerPage]; ++it)
+	
+	vector<AllegroImage*>::iterator it;
+	for (it = usrImgs.begin(); it != usrImgs.end() ; ++it) //todas las imagenes hasta que se termine el arreglo o llegue a la maxima cantidad van a la pantalla
 	{
 		delete (*it);
 	}
+	
+	/*for (vector<AllegroImage*>::iterator it = usrImgs.begin(); it != usrImgs.end() && (*it) != usrImgs[imagesPerPage]; ++it)
+	{
+		delete (*it);
+	}*/
 	usrImgs.clear();
 	selectedImgs.clear();
 }
 
 bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 {
+	
 	if (!usrImgs.empty())
 	{
 		bool retVal = true;
@@ -64,6 +72,7 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 			al_destroy_display(display);
 			retVal = false;
 		}
+		
 		al_register_event_source(eventQueue, al_get_keyboard_event_source());
 		al_register_event_source(eventQueue, al_get_display_event_source(display));
 		backround = al_load_bitmap(BACKROUND_PATH);
@@ -76,6 +85,7 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 			al_destroy_display(display);
 
 		}
+		
 		checkedBox = al_load_bitmap(CHECKED_BOX_PATH);
 		if (checkedBox == NULL && retVal)
 		{
@@ -99,6 +109,7 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 			al_destroy_bitmap(checkedBox);
 
 		}
+		
 		imageNameFont = al_load_ttf_font(IMAGE_NAME_FONT_PATH,IMAGE_NAME_FONT_SIZE,0);
 		if (imageNameFont == NULL && retVal)
 		{
@@ -109,23 +120,29 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 			al_destroy_display(display);
 			al_destroy_bitmap(backround);
 		}
+		
 		titleFont = al_load_ttf_font(TITLE_FONT_PATH, TITLE_FONT_SIZE, 0);
 		if (titleFont == NULL)
 		{
 			allegroError.setErrType(ErrType::ALLEGRO_FAILED_FONT_LOAD);
 			allegroError.setErrDetail(string("Failed to load font at ") + TITLE_FONT_PATH + '\n');
 			retVal = false;
+			
 			al_destroy_event_queue(eventQueue);
 			al_destroy_display(display);
 			al_destroy_bitmap(backround);
 			al_destroy_font(imageNameFont);
 		}
+		
+
 		displaySize.height = dHeight;
 		displaySize.width = dWidth;
 		imagesPerPage = PAGE_IMAGES;
 		
+
 		if (retVal)
 		{
+		
 			configOnScreenImgs();
 			clearDisplay();
 			drawBackround();
@@ -133,6 +150,7 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 			drawScreenInterface();
 			al_flip_display();
 		}
+		
 		return UIcreated = retVal;
 	}
 	else
