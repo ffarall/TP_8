@@ -118,8 +118,16 @@ int main(int argc, char* argv[])
 	for (Image* imagen : imagenVector)
 	{
 		string path((*imagen).getPath());
-		Compressor temp(path.c_str(), datosCmd.threshold);
-		temp.encode((*imagen).getPath().substr(0, (*imagen).getPath().find_last_of('.')).c_str());
+		if (datosCmd.mode)
+		{
+			Compressor temp(path.c_str(), datosCmd.threshold);
+			temp.encode((*imagen).getPath().substr(0, (*imagen).getPath().find_last_of('.')).c_str());
+		}
+		else
+		{
+			Compressor temp;
+			temp.decode(path.c_str());
+		}
 	}
 
 	//Compressor hola("fotos\\imagen4.png", 10);
