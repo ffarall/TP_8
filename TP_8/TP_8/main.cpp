@@ -23,7 +23,8 @@ int main(int argc, char* argv[])
 {
 	util datosCmd;
 	std::cout << argc << std::endl;
-	getchar();
+
+
 	int error = parseCmdLine(argc, argv, [](char * key, char * value, void* userData) {
 		util* externdata = (util *)userData;
 		int error=1;
@@ -96,7 +97,6 @@ int main(int argc, char* argv[])
 		cout << p << "No existe\n";
 
 	cout << "Listo los archivos\n"; //hasta aca funciona, mas abajo muere en algun lado
-	getchar();
 
 	if (!ui.createUI())
 	{
@@ -117,9 +117,9 @@ int main(int argc, char* argv[])
 	vector<Image *> imagenVector = *(ui.getSelectedImages());
 	for (Image* imagen : imagenVector)
 	{
-		string path((*imagen).getPath() + string(".") + (*imagen).getFormat());
+		string path((*imagen).getPath());
 		Compressor temp(path.c_str(), datosCmd.threshold);
-		temp.encode((*imagen).getPath().c_str());
+		temp.encode((*imagen).getPath().substr(0, (*imagen).getPath().find_last_of('.')).c_str());
 	}
 
 	//Compressor hola("fotos\\imagen4.png", 10);
