@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
 		else
 			error = 0;
 
-		std::cout << value << " " << error << std::endl;
 		return error;
 	}, &datosCmd);
 	

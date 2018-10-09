@@ -119,8 +119,16 @@ bool GUI::createUI(unsigned int dWidth , unsigned int dHeight )
 		displaySize.height = dHeight;
 		displaySize.width = dWidth;
 		imagesPerPage = PAGE_IMAGES;
-		configOnScreenImgs();
-		refresh();
+		
+		if (retVal)
+		{
+			configOnScreenImgs();
+			clearDisplay();
+			drawBackround();
+			drawImages();
+			drawScreenInterface();
+			al_flip_display();
+		}
 		return UIcreated = retVal;
 	}
 	else
