@@ -34,7 +34,7 @@ Compressor::Compressor(const char * dataArray, double threshold_) : pixelMatrix(
 		}
 	}
 
-	threshold = threshold_ * 255 / 100;
+	threshold = (threshold_ * 255 / 100);
 	
 }
 
@@ -189,7 +189,7 @@ bool Compressor::decodeRec(fstream& fp, int x, int y, int ancho)
 
 bool Compressor::encodeRec(int x, int y, int n_)
 {
-	Pixel maxPixel = getPixel(x,y) ;
+	Pixel maxPixel = getPixel(x, y) ;
 	Pixel minPixel = getPixel(x, y);
 	Pixel tempPixel;
 
@@ -234,7 +234,11 @@ bool Compressor::encodeRec(int x, int y, int n_)
 		}
 	}
 
-	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getG() - minPixel.getG(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
+	double quadrantScore = sqrt(pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getR() - minPixel.getR(), 2) + pow(maxPixel.getB() - minPixel.getB(), 2) + pow(maxPixel.getAlpha() - minPixel.getAlpha(), 2));
+	quadrantScore /= sqrt(4);
+
+	// double quadrantScore = (maxPixel.getR() - minPixel.getR()) + (maxPixel.getG() - minPixel.getG()) + (maxPixel.getB() - minPixel.getB()) + (maxPixel.getAlpha() - minPixel.getAlpha());
+	// quadrantScore /= 4;
 
 	if (quadrantScore <= threshold)		// If the variation is less than the threshold established... 
 	{
@@ -248,7 +252,7 @@ bool Compressor::encodeRec(int x, int y, int n_)
 	else
 	{
 		compressedFile << 'N';				// Since the variation is higher than the threshold, a new node is created. 
-        return (encodeRec(n / 2, 0, n / 2) && encodeRec(0, 0, n / 2) && encodeRec(0, n / 2, n / 2) && encodeRec(n / 2, n / 2, n / 2));
+        return (encodeRec(n_ / 2, 0, n_ / 2) && encodeRec(0, 0, n_ / 2) && encodeRec(0, n_ / 2, n_ / 2) && encodeRec(n_ / 2, n_ / 2, n_ / 2));
 	}
 }
 
